@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GestaoJogosUI.Models.Jogo>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Emprestados</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amigo)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amigo.Nome)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

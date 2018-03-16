@@ -1,0 +1,17 @@
+CREATE Database gestaojogosBD;
+
+
+
+CREATE TABLE [dbo].[Amigo] (
+    [ID]   INT            IDENTITY (1, 1) NOT NULL,
+    [Nome] NVARCHAR (200) NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
+CREATE TABLE [dbo].[Jogo] (
+    [ID]      INT            IDENTITY (1, 1) NOT NULL,
+    [Nome]    NVARCHAR (200) NOT NULL,
+    [AmigoID] INT            NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_Jogo_ToTable] FOREIGN KEY ([AmigoID]) REFERENCES [dbo].[Amigo] ([ID])
+);
