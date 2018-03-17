@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GestaoJogosUI.Models.Jogo>
+﻿@model IEnumerable<Dominio.Model.Jogo>
 
 @{
     ViewData["Title"] = "Jogos";
@@ -7,7 +7,7 @@
 <h2>Jogos</h2>
 
 <p>
-    <a asp-action="Create">Novo</a>
+    <a asp-action="Edit">Novo</a>
 </p>
 <table class="table">
     <thead>
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Amigo.Nome)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.ID">Editar</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>

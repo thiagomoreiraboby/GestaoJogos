@@ -1,5 +1,3 @@
-using System;
-
 namespace GestaoJogosUI.Models
 {
     public class ErrorViewModel

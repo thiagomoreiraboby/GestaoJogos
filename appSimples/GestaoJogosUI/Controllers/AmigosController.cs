@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GestaoJogosUI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoJogosUI.Controllers
 {
+    [Authorize]
     public class AmigosController : Controller
     {
         private readonly GestaoJogosUIContext _context;
@@ -19,7 +18,7 @@ namespace GestaoJogosUI.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Amigo.ToListAsync());
+            return View(await _context.Amigo.Where(x=> x.ID > 1).ToListAsync());
         }
 
         // GET: Amigoes/Edit/5
@@ -40,33 +39,14 @@ namespace GestaoJogosUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("ID,Nome")] Amigo amigo)
+        public async Task<IActionResult> Edit([Bind("ID,Nome")] Amigo amigo)
         {
-            if (id != amigo.ID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
                     if(amigo.ID == null)
                     _context.Add(amigo);
                     else _context.Update(amigo);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AmigoExists(amigo.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(amigo);

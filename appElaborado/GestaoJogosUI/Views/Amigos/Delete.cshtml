@@ -1,4 +1,4 @@
-﻿@model GestaoJogosUI.Models.Amigo
+﻿@model Dominio.Model.Amigo
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,10 +6,8 @@
 
 <h2>Delete</h2>
 
-<h3>Deseja realmente deletar @Html.DisplayFor(model => model.Nome) ?</h3>
+<h3>Deseja Realmente deletar este Amigo?</h3>
 <div>
-    <h4>Amigo</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Nome)

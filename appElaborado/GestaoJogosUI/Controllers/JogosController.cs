@@ -1,78 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GestaoJogosUI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Dominio.Servico;
+using Dominio.Model;
 
 namespace GestaoJogosUI.Controllers
 {
+    [Authorize]
     public class JogosController : Controller
     {
-        private readonly GestaoJogosUIContext _context;
-
-        public JogosController(GestaoJogosUIContext context)
+        private readonly IJogoRepositorio _context;
+        private readonly IAmigoRepositorio _contextAmigo;
+        public JogosController(IJogoRepositorio context, IAmigoRepositorio contextAmigo)
         {
             _context = context;
+            _contextAmigo = contextAmigo;
         }
 
         // GET: Jogos
         public async Task<IActionResult> Index()
         {
-            var gestaoJogosUIContext = _context.Jogo.Include(j => j.Amigo);
-            return View(await gestaoJogosUIContext.ToListAsync());
+            var gestaoJogosUIContext = await _context.PesquisarTodoscomIncludAsync();
+            return View(gestaoJogosUIContext.ToList());
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
+                ViewData["AmigoID"] = new SelectList(await _contextAmigo.PesquisarTodosAsync(), "ID", "Nome", 1);
                 return View(new Jogo());
             }
 
-            var jogo = await _context.Jogo.SingleOrDefaultAsync(m => m.ID == id);
+            var jogo = await _context.PesquisarporIdAsync((int)id);
             if (jogo == null)
             {
                 return NotFound();
             }
-            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "ID", jogo.AmigoID);
+            ViewData["AmigoID"] = new SelectList(await _contextAmigo.PesquisarTodosAsync(), "ID", "Nome", jogo.AmigoID);
             return View(jogo);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("ID,Nome,AmigoID")] Jogo jogo)
+        public async Task<IActionResult> Edit([Bind("ID,Nome,AmigoID")] Jogo jogo)
         {
-            if (id != jogo.ID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    if(jogo.ID == null)
-                    _context.Add(jogo);
-                    else _context.Update(jogo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JogoExists(jogo.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                    await _context.SalvarAsync(jogo);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "ID", jogo.AmigoID);
+            ViewData["AmigoID"] = new SelectList(await _contextAmigo.PesquisarTodosAsync(), "ID", "Nome", jogo.AmigoID);
             return View(jogo);
         }
 
@@ -84,9 +64,7 @@ namespace GestaoJogosUI.Controllers
                 return NotFound();
             }
 
-            var jogo = await _context.Jogo
-                .Include(j => j.Amigo)
-                .SingleOrDefaultAsync(m => m.ID == id);
+            var jogo = await _context.PesquisarporIdAsync((int)id);
             if (jogo == null)
             {
                 return NotFound();
@@ -100,15 +78,9 @@ namespace GestaoJogosUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var jogo = await _context.Jogo.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Jogo.Remove(jogo);
-            await _context.SaveChangesAsync();
+            var jogo = await _context.PesquisarporIdAsync((int)id);
+            await _context.DeleteAsync(jogo);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool JogoExists(int? id)
-        {
-            return _context.Jogo.Any(e => e.ID == id);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using GestaoJogosUI.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace GestaoJogosUI.Models
 {
@@ -17,5 +12,7 @@ namespace GestaoJogosUI.Models
         public DbSet<GestaoJogosUI.Models.Amigo> Amigo { get; set; }
 
         public DbSet<GestaoJogosUI.Models.Jogo> Jogo { get; set; }
+
+        public DbSet<GestaoJogosUI.Models.Usuario> Usuario { get; set; }
     }
 }

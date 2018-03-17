@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GestaoJogosUI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoJogosUI.Controllers
 {
+    [Authorize]
     public class JogosController : Controller
     {
         private readonly GestaoJogosUIContext _context;
-
         public JogosController(GestaoJogosUIContext context)
         {
             _context = context;
@@ -21,14 +20,14 @@ namespace GestaoJogosUI.Controllers
         // GET: Jogos
         public async Task<IActionResult> Index()
         {
-            var gestaoJogosUIContext = _context.Jogo.Include(j => j.Amigo);
-            return View(await gestaoJogosUIContext.ToListAsync());
+            return View(await _context.Jogo.Include(j => j.Amigo).ToListAsync());
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
+                ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "Nome", 1);
                 return View(new Jogo());
             }
 
@@ -37,42 +36,23 @@ namespace GestaoJogosUI.Controllers
             {
                 return NotFound();
             }
-            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "ID", jogo.AmigoID);
+            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "Nome", jogo.AmigoID);
             return View(jogo);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("ID,Nome,AmigoID")] Jogo jogo)
+        public async Task<IActionResult> Edit([Bind("ID,Nome,AmigoID")] Jogo jogo)
         {
-            if (id != jogo.ID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
                     if(jogo.ID == null)
                     _context.Add(jogo);
                     else _context.Update(jogo);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JogoExists(jogo.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "ID", jogo.AmigoID);
+            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "Nome", jogo.AmigoID);
             return View(jogo);
         }
 

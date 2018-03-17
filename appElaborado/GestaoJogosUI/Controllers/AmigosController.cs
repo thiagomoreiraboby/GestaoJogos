@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GestaoJogosUI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Dominio.Servico;
+using Dominio.Model;
 
 namespace GestaoJogosUI.Controllers
 {
+    [Authorize]
     public class AmigosController : Controller
     {
-        private readonly GestaoJogosUIContext _context;
 
-        public AmigosController(GestaoJogosUIContext context)
+        private readonly IAmigoRepositorio _context;
+
+        public AmigosController(IAmigoRepositorio context)
         {
             _context = context;
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Amigo.ToListAsync());
+            var lista = await _context.PesquisarTodosAsync();
+            return View(lista.Where(x=> x.ID > 1));
         }
 
         // GET: Amigoes/Edit/5
@@ -30,7 +31,7 @@ namespace GestaoJogosUI.Controllers
                 return View(new Amigo());
             }
 
-            var amigo = await _context.Amigo.SingleOrDefaultAsync(m => m.ID == id);
+            var amigo = await _context.PesquisarporIdAsync((int)id);
             if (amigo == null)
             {
                 return NotFound();
@@ -40,33 +41,11 @@ namespace GestaoJogosUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("ID,Nome")] Amigo amigo)
+        public async Task<IActionResult> Edit([Bind("ID,Nome")] Amigo amigo)
         {
-            if (id != amigo.ID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    if(amigo.ID == null)
-                    _context.Add(amigo);
-                    else _context.Update(amigo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AmigoExists(amigo.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                 await _context.SalvarAsync(amigo);
                 return RedirectToAction(nameof(Index));
             }
             return View(amigo);
@@ -80,8 +59,7 @@ namespace GestaoJogosUI.Controllers
                 return NotFound();
             }
 
-            var amigo = await _context.Amigo
-                .SingleOrDefaultAsync(m => m.ID == id);
+            var amigo = await _context.PesquisarporIdAsync((int) id);
             if (amigo == null)
             {
                 return NotFound();
@@ -95,15 +73,9 @@ namespace GestaoJogosUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var amigo = await _context.Amigo.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Amigo.Remove(amigo);
-            await _context.SaveChangesAsync();
+            var amigo = await _context.PesquisarporIdAsync((int)id);
+            await _context.DeleteAsync(amigo);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AmigoExists(int? id)
-        {
-            return _context.Amigo.Any(e => e.ID == id);
         }
     }
 }

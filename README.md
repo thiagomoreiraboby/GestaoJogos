@@ -5,7 +5,7 @@ Desenvolvido em DotNet Core, Asp.Net MVC, EntityFrameworkCore e Sql Server.
 
 E dividido em dois projetos um Simples e um mais elaborado.
 
-Projeto Simples: E o MVC básico o mais simples possível. 
+Projeto Simples: E o MVC básico o mais simples possível.
 
 Projeto Elaborado: E Feito usando DDD Repositório Base injeção de dependência.
 
@@ -26,4 +26,6 @@ Projeto Elaborado:
 Execute "dotnet run --project .\appElaborado\GestaoJogosUI\GestaoJogosUI.csproj"
 
 Clique no link Gerado e utilize.
+
+Usuario: e adm e senha: adm
 
