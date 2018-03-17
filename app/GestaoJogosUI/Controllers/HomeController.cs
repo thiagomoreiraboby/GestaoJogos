@@ -24,6 +24,19 @@ namespace GestaoJogosUI.Controllers
             return View(await gestaoJogosUIContext.ToListAsync());
         }
 
+
+        [HttpPost, ActionName("Devolver")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DevolverConfirmed(int? id)
+        {
+            var jogo = await _context.Jogo.SingleOrDefaultAsync(m => m.ID == id);
+            jogo.AmigoID = null;
+            jogo.Amigo = null;
+            _context.Update(jogo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

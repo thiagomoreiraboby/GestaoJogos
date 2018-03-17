@@ -13,6 +13,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Amigo)
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Amigo.Nome)
+                </td>
+                <td>
+                <form asp-action="Devolver">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Devolver" class="btn btn-default" /> |
+    </form>
                 </td>
             </tr>
         }

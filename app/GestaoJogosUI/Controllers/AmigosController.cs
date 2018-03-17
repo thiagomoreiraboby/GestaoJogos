@@ -17,51 +17,9 @@ namespace GestaoJogosUI.Controllers
         {
             _context = context;
         }
-
-        // GET: Amigoes
         public async Task<IActionResult> Index()
         {
             return View(await _context.Amigo.ToListAsync());
-        }
-
-        // GET: Amigoes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var amigo = await _context.Amigo
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (amigo == null)
-            {
-                return NotFound();
-            }
-
-            return View(amigo);
-        }
-
-        // GET: Amigoes/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Amigoes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Nome")] Amigo amigo)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(amigo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(amigo);
         }
 
         // GET: Amigoes/Edit/5
@@ -69,7 +27,7 @@ namespace GestaoJogosUI.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View(new Amigo());
             }
 
             var amigo = await _context.Amigo.SingleOrDefaultAsync(m => m.ID == id);
@@ -80,9 +38,6 @@ namespace GestaoJogosUI.Controllers
             return View(amigo);
         }
 
-        // POST: Amigoes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, [Bind("ID,Nome")] Amigo amigo)
@@ -96,7 +51,9 @@ namespace GestaoJogosUI.Controllers
             {
                 try
                 {
-                    _context.Update(amigo);
+                    if(amigo.ID == null)
+                    _context.Add(amigo);
+                    else _context.Update(amigo);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

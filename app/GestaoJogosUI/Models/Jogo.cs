@@ -9,7 +9,7 @@ namespace GestaoJogosUI.Models
     {
         public int? ID { get; set; }
         public string Nome { get; set; }
-        public int AmigoID { get; set; }
+        public int? AmigoID { get; set; }
         public Amigo Amigo { get; set; }
     }
 }
