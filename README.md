@@ -27,5 +27,5 @@ Execute "dotnet run --project .\appElaborado\GestaoJogosUI\GestaoJogosUI.csproj"
 
 Clique no link Gerado e utilize.
 
-Usuario: e adm e senha: adm
+Usuario: adm e senha: adm
 
