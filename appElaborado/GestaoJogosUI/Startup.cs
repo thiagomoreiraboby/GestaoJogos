@@ -10,6 +10,8 @@ using Dominio.Servico;
 using Repositorio.Repositorio;
 using Repositorio.Context;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using GestaoJogosUI.Mapper;
 
 namespace GestaoJogosUI
 {
@@ -30,7 +32,6 @@ namespace GestaoJogosUI
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(typeof(IRepositorioBase<>), typeof(RepositorioBase<>));
-            //services.AddScoped(typeof(IRepositorioBase<>), typeof(RepositorioBase<>));
             services.AddTransient<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddTransient<IAmigoRepositorio, AmigoRepositorio>();
             services.AddTransient<IJogoRepositorio, JogoRepositorio>();
@@ -53,7 +54,9 @@ namespace GestaoJogosUI
                     context.Response.Redirect(context.RedirectUri);
                 };
             });
-            
+
+            services.AddAutoMapper(x => x.AddProfile(new MapperGestao()));
+
             services.AddMvc();
         
         }

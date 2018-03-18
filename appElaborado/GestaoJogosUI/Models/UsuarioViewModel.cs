@@ -2,7 +2,7 @@
 
 namespace GestaoJogosUI.Models
 {
-    public class Usuario: EntidadeBase
+    public class UsuarioViewModel : EntidadeBaseViewModel
     {
         [Required(ErrorMessage = "Digite a senha.")]
         [MinLength(1, ErrorMessage = "O tamanho mínimo do nome são 1 caracteres.")]

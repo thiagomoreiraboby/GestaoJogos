@@ -6,6 +6,7 @@ using GestaoJogosUI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestaoJogosUI.Controllers
 {
@@ -70,6 +71,40 @@ namespace GestaoJogosUI.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        public async Task<IActionResult> Emprestar(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var jogo = await _context.Jogo.SingleOrDefaultAsync(m => m.ID == id);
+            if (jogo == null)
+            {
+                return NotFound();
+            }
+            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "Nome", jogo.AmigoID);
+            return View(jogo);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Emprestar([Bind("ID,Nome,AmigoID")] Jogo jogo)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(jogo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["AmigoID"] = new SelectList(_context.Amigo, "ID", "Nome", jogo.AmigoID);
+            return View(jogo);
+        }
+
+
+
 
         public IActionResult Error()
         {

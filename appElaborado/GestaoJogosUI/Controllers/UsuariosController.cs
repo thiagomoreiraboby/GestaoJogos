@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Dominio.Servico;
+using GestaoJogosUI.Models;
+using AutoMapper;
+using System.Collections.Generic;
 using Dominio.Model;
 
 namespace GestaoJogosUI.Controllers
@@ -12,14 +15,16 @@ namespace GestaoJogosUI.Controllers
     {
 
         private readonly IUsuarioRepositorio _context;
+        public readonly IMapper _mapper;
 
-        public UsuariosController(IUsuarioRepositorio context)
+        public UsuariosController(IUsuarioRepositorio context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
-            return View( await _context.PesquisarTodosAsync());
+            return View(_mapper.Map<List<UsuarioViewModel>>(await _context.PesquisarTodosAsync()));
         }
 
         // GET: Amigoes/Edit/5
@@ -27,10 +32,10 @@ namespace GestaoJogosUI.Controllers
         {
             if (id == null)
             {
-                return View(new Usuario());
+                return View(new UsuarioViewModel());
             }
 
-            var usuario = await _context.PesquisarporIdAsync((int)id);
+            var usuario = _mapper.Map<UsuarioViewModel>(await _context.PesquisarporIdAsync((int)id));
             if (usuario == null)
             {
                 return NotFound();
@@ -40,13 +45,11 @@ namespace GestaoJogosUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("ID,Nome,Senha")] Usuario usuario)
+        public async Task<IActionResult> Edit([Bind("ID,Nome,Senha")] UsuarioViewModel usuario)
         {
             if (ModelState.IsValid)
             {
-                if(string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrEmpty(usuario.Nome))
-                    return View(usuario);
-                 await _context.SalvarAsync(usuario);
+                await _context.SalvarAsync(_mapper.Map<Usuario>(usuario));
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
@@ -60,7 +63,7 @@ namespace GestaoJogosUI.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.PesquisarporIdAsync((int) id);
+            var usuario = _mapper.Map<UsuarioViewModel>(await _context.PesquisarporIdAsync((int) id));
             if (usuario == null)
             {
                 return NotFound();

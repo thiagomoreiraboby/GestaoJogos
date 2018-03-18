@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Dominio.Model.Jogo>
+﻿@model IEnumerable<GestaoJogosUI.Models.JogoViewModel>
 @{
     ViewData["Title"] = "Home";
 }
@@ -18,17 +18,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item1 in Model)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Nome)
+                            @Html.DisplayFor(modelItem => item1.Nome)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Amigo.Nome)
+                            @Html.DisplayFor(modelItem => item1.Amigo.Nome)
                         </td>
                         <td>
-                            <a asp-action="Devolver" asp-route-id="@item.ID">Devolver</a>
+                            <a asp-action="Devolver" asp-route-id="@item1.ID">Devolver</a>
                         </td>
                     </tr>
                 }
@@ -43,14 +43,20 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Nome)
                     </th>
+                    <th>
+                        
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in ViewBag.jogoscomvoce as IEnumerable<Dominio.Model.Jogo>)
+                @foreach (var item in ViewBag.jogoscomvoce as IEnumerable<GestaoJogosUI.Models.JogoViewModel>)
                 {
                     <tr asp>
                         <td>
                             @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            <a asp-action="Emprestar" asp-route-id="@item.ID">Emprestar</a>
                         </td>
                     </tr>
                 }

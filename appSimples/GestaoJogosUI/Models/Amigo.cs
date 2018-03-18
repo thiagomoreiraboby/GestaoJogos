@@ -1,8 +1,11 @@
-﻿namespace GestaoJogosUI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GestaoJogosUI.Models
 {
-    public class Amigo
+    public class Amigo : EntidadeBase
     {
-        public int? ID { get; set; }
-        public string Nome { get; set; }
+        public Amigo()
+        {
+        }
     }
 }

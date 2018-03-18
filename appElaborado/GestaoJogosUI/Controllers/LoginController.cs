@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dominio.Model;
 using Dominio.Servico;
+using GestaoJogosUI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +14,12 @@ namespace GestaoJogosUI.Controllers
     public class LoginController : Controller
     {
         private readonly IUsuarioRepositorio _context;
-        public LoginController(IUsuarioRepositorio context)
+        public readonly IMapper _mapper;
+
+        public LoginController(IUsuarioRepositorio context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -32,11 +37,11 @@ namespace GestaoJogosUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(Usuario usuario)
+        public async Task<IActionResult> Login(UsuarioViewModel usuario)
         {
             if (ModelState.IsValid)
             {
-                var user = await _context.LogarAsync(usuario);
+                var user = await _context.LogarAsync(_mapper.Map<Usuario>(usuario));
                 if (user != null)
                 {
                     var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);

@@ -7,7 +7,7 @@ E dividido em dois projetos um Simples e um mais elaborado.
 
 Projeto Simples: E o MVC básico o mais simples possível.
 
-Projeto Elaborado: E Feito usando DDD Repositório Base injeção de dependência.
+Projeto Elaborado: E Feito usando DDD, Repositório Base, injeção de dependência, AutoMapper.
 
 Para executar os projetos precisa do sdk do Dotnet Core e Sql Server instalados.
 

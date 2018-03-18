@@ -43,16 +43,22 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Nome)
                     </th>
+                    <th>
+
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in ViewBag.jogoscomvoce as IEnumerable<GestaoJogosUI.Models.Jogo>)
                 {
-                    <tr asp>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nome)
-                        </td>
-                    </tr>
+                <tr asp>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        <a asp-action="Emprestar" asp-route-id="@item.ID">Emprestar</a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

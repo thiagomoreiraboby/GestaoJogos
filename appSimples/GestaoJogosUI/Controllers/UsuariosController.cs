@@ -44,8 +44,6 @@ namespace GestaoJogosUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrEmpty(usuario.Nome))
-                    return View(usuario);          
                  if(usuario.ID == null)
                     _context.Add(usuario);
                     else _context.Update(usuario);

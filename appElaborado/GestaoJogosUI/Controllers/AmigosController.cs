@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Dominio.Servico;
+using GestaoJogosUI.Models;
+using AutoMapper;
+using System.Collections.Generic;
 using Dominio.Model;
 
 namespace GestaoJogosUI.Controllers
@@ -12,14 +15,16 @@ namespace GestaoJogosUI.Controllers
     {
 
         private readonly IAmigoRepositorio _context;
+        private readonly IMapper _mapper;
 
-        public AmigosController(IAmigoRepositorio context)
+        public AmigosController(IAmigoRepositorio context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
-            var lista = await _context.PesquisarTodosAsync();
+            var lista = _mapper.Map<List<AmigoViewModel>>(await _context.PesquisarTodosAsync());
             return View(lista.Where(x=> x.ID > 1));
         }
 
@@ -28,10 +33,10 @@ namespace GestaoJogosUI.Controllers
         {
             if (id == null)
             {
-                return View(new Amigo());
+                return View(new AmigoViewModel());
             }
 
-            var amigo = await _context.PesquisarporIdAsync((int)id);
+            var amigo = _mapper.Map<AmigoViewModel>(await _context.PesquisarporIdAsync((int)id));
             if (amigo == null)
             {
                 return NotFound();
@@ -41,11 +46,11 @@ namespace GestaoJogosUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("ID,Nome")] Amigo amigo)
+        public async Task<IActionResult> Edit([Bind("ID,Nome")] AmigoViewModel amigo)
         {
             if (ModelState.IsValid)
             {
-                 await _context.SalvarAsync(amigo);
+                 await _context.SalvarAsync(_mapper.Map<Amigo>(amigo));
                 return RedirectToAction(nameof(Index));
             }
             return View(amigo);
@@ -59,7 +64,7 @@ namespace GestaoJogosUI.Controllers
                 return NotFound();
             }
 
-            var amigo = await _context.PesquisarporIdAsync((int) id);
+            var amigo = _mapper.Map<AmigoViewModel>(await _context.PesquisarporIdAsync((int) id));
             if (amigo == null)
             {
                 return NotFound();
