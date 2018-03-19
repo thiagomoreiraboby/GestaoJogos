@@ -35,6 +35,7 @@ namespace GestaoJogosUI
             services.AddTransient<IAmigoRepositorio, AmigoRepositorio>();
             services.AddTransient<IJogoRepositorio, JogoRepositorio>();
 
+
             services.AddAuthentication(options =>
             {
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
