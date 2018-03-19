@@ -18,47 +18,14 @@ namespace GestaoJogosUI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IJogoRepositorio _context;
-        private static IHttpContextAccessor _contextAccessor;
         public readonly IAmigoRepositorio _contextAmigo;
-        private static HttpContext _contexthttp { get { return _contextAccessor.HttpContext; } }
 
-        public HomeController(IJogoRepositorio context, IAmigoRepositorio contextAmigo, IHttpContextAccessor contextAccessor, IMapper mapper)
+        public HomeController(IJogoRepositorio context, IAmigoRepositorio contextAmigo, IMapper mapper)
         {
             _context = context;
             _contextAmigo = contextAmigo;
-            _contextAccessor = contextAccessor;
             _mapper = mapper;
         }
-
-        public static string UserName
-        {
-            get
-            {
-                var userName = "";
-                try
-                {
-                    if (_contexthttp != null)
-                    {
-                        if (_contexthttp.User != null)
-                        {
-                            var identity = _contexthttp.User.Identity;
-
-                            if (identity != null && identity.IsAuthenticated)
-                            {
-                                userName = identity.Name;
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-                return userName;
-            }
-        }
-
-        
 
         public async Task<IActionResult> Index()
         {

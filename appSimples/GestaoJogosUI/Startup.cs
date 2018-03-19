@@ -28,8 +28,6 @@ namespace GestaoJogosUI
             services.AddDbContext<GestaoJogosUIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("GestaoJogosUIContext")));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddAuthentication(options =>
             {
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;

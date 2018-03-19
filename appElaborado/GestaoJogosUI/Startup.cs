@@ -30,7 +30,6 @@ namespace GestaoJogosUI
             services.AddDbContext<GestaoJogosUIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("GestaoJogosUIContext")));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(typeof(IRepositorioBase<>), typeof(RepositorioBase<>));
             services.AddTransient<IUsuarioRepositorio, UsuarioRepositorio>();
             services.AddTransient<IAmigoRepositorio, AmigoRepositorio>();

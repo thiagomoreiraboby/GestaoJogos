@@ -14,44 +14,11 @@ namespace GestaoJogosUI.Controllers
     public class HomeController : Controller
     {
         private readonly GestaoJogosUIContext _context;
-        private static IHttpContextAccessor _contextAccessor;
-        private static HttpContext _contexthttp { get { return _contextAccessor.HttpContext; } }
+ 
 
-        public HomeController(GestaoJogosUIContext context, IHttpContextAccessor contextAccessor)
+        public HomeController(GestaoJogosUIContext context)
         {
             _context = context;
-            _contextAccessor = contextAccessor;
-        }
-
-        public static string UserName
-        {
-            get
-            {
-                var userName = "";
-                try
-                {
-
-                if (_contexthttp != null)
-                {
-                    if (_contexthttp.User != null)
-                    {
-                        var identity = _contexthttp.User.Identity;
-
-                        if (identity != null && identity.IsAuthenticated)
-                        {
-                            userName = identity.Name;
-                        }
-                    }
-                }
-
-                }
-                catch
-                {
-
-
-                }
-                return userName;
-            }
         }
 
         public async Task<IActionResult> Index()

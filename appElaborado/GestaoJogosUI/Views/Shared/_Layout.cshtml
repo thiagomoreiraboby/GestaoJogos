@@ -29,18 +29,24 @@
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Gestão de Jogos</a>
             </div>
             <div class="navbar-collapse collapse">
-                @using GestaoJogosUI.Controllers
-                <ul class="nav navbar-nav">
-@if (!string.IsNullOrEmpty(@HomeController.UserName))
-{
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Amigos" asp-action="Index">Amigos</a></li>
-                    <li><a asp-area="" asp-controller="Jogos" asp-action="Index">Jogos</a></li>
-                    <li><a asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a></li>
-                    <li><a asp-area="" asp-controller="Login" asp-action="Logout">@HomeController.UserName Logout</a></li>
-}
+                @{
+                    if (User.Identity.IsAuthenticated)
+                    {
+            <ul class="nav navbar-nav">
 
-                </ul>
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-area="" asp-controller="Amigos" asp-action="Index">Amigos</a></li>
+                <li><a asp-area="" asp-controller="Jogos" asp-action="Index">Jogos</a></li>
+                <li><a asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a></li>
+                <li><a asp-area="" asp-controller="Login" asp-action="Logout">@User.Identity.Name Logout</a></li>
+
+
+            </ul>
+
+                        }
+                    }
+
+
             </div>
         </div>
     </nav>
